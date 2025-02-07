@@ -8,6 +8,7 @@ import router from '@/router'
 
 const app = createApp(App)
 const pinia = createPinia()
+app.use(pinia)
 pinia.use(piniaPluginPersistedstate)
 
 // 注册所有图标

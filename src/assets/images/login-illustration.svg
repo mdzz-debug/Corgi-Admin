@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+  <style>
+    .bg { fill: rgba(255, 255, 255, 0.1) }
+    .primary { fill: #fff }
+    .secondary { fill: rgba(255, 255, 255, 0.6) }
+  </style>
+  <rect class="bg" width="400" height="300" rx="8"/>
+  <circle class="primary" cx="200" cy="120" r="40"/>
+  <rect class="secondary" x="120" y="180" width="160" height="12" rx="6"/>
+  <rect class="secondary" x="160" y="200" width="80" height="8" rx="4"/>
+</svg>

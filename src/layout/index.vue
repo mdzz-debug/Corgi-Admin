@@ -19,7 +19,7 @@
                         <Expand v-if="isCollapse" />
                         <Fold v-else />
                     </el-icon>
-                    <el-icon class="collapse-btn" @click="handleRefresh">
+                    <el-icon class="collapse-btn collapse-btn-left" @click="handleRefresh">
                         <Refresh />
                     </el-icon>
                     <Breadcrumb v-if="themeStore.showBreadcrumb" />
@@ -197,8 +197,11 @@ const handleRefresh = () => {
 .collapse-btn {
     font-size: 20px;
     cursor: pointer;
-    margin-left: 16px;
     transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.collapse-btn-left {
+    margin-left: 16px;
 }
 
 .collapse-btn:hover {
