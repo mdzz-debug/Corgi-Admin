@@ -5,7 +5,9 @@ import { useThemeStore } from '@/store/theme'
 const themeStore = useThemeStore()
 
 onMounted(() => {
-  // 初始化时检查暗黑模式状态
+  // 先初始化主题设置
+  themeStore.initTheme()
+  // 检查暗黑模式状态
   if (themeStore.isDarkMode) {
     document.documentElement.classList.add('dark')
   }

@@ -9,6 +9,7 @@ export const useThemeStore = defineStore('theme', {
     actions: {
         setPrimaryColor(color: string) {
             this.primaryColor = color
+            this.updatePrimaryColor()
         },
         setShowBreadcrumb(show: boolean) {
             this.showBreadcrumb = show
@@ -17,6 +18,15 @@ export const useThemeStore = defineStore('theme', {
             this.isDarkMode = !this.isDarkMode
             document.documentElement.classList.toggle('dark')
         },
+        updatePrimaryColor() {
+            document.documentElement.style.setProperty('--el-color-primary', this.primaryColor)
+        },
+        initTheme() {
+            this.updatePrimaryColor()
+            if (this.isDarkMode) {
+                document.documentElement.classList.add('dark')
+            }
+        }
     },
     persist: true
 })

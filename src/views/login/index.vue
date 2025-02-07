@@ -1,15 +1,6 @@
 <template>
     <div class="login-container">
         <div class="login-content">
-            <div class="login-left">
-                <div class="login-illustration">
-                    <img src="https://cdn.jsdelivr.net/gh/vbenjs/vben-admin-thin-next@main/src/assets/svg/login-box-bg.svg" alt="登录插画" />
-                </div>
-                <div class="login-text">
-                    <h1>开箱即用的大型中后台管理系统</h1>
-                    <p>工程化、高性能、跨组件库的前端模版</p>
-                </div>
-            </div>
             <div class="login-right">
                 <div class="login-header">
                     <h2>欢迎回来 👋</h2>
@@ -22,10 +13,10 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item>
-                        <el-input v-model="username" placeholder="vben" />
+                        <el-input v-model="username" placeholder="Corgi" />
                     </el-form-item>
                     <el-form-item>
-                        <el-input v-model="password" type="password" placeholder="******" show-password>
+                        <el-input v-model="password" type="password" placeholder="123456" show-password>
                             <template #suffix>
                                 <el-icon><View /></el-icon>
                             </template>
@@ -36,27 +27,7 @@
                         <el-link type="primary">忘记密码？</el-link>
                     </div>
                     <el-button type="primary" class="login-button" @click="handleLogin">登录</el-button>
-                    <div class="login-divider">
-                        <span>请使用滑块验证</span>
-                    </div>
-                    <div class="slide-verify">
-                        <!-- 这里添加滑块验证组件 -->
-                    </div>
                 </el-form>
-                <div class="login-footer">
-                    <div class="other-login">
-                        <span>其他登录方式</span>
-                        <div class="login-icons">
-                            <el-icon><Wechat /></el-icon>
-                            <el-icon><Bell /></el-icon>
-                            <el-icon><Github /></el-icon>
-                            <el-icon><Google /></el-icon>
-                        </div>
-                    </div>
-                    <div class="register-link">
-                        还没有账号？<el-link type="primary">创建账号</el-link>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -65,19 +36,19 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useUserStore } from '@/stores/user'  // 修改这里的路径
+import { useAuthStore } from '@/store/auth'
 
 const router = useRouter()
-const userStore = useUserStore()
+const authStore = useAuthStore()
 
 const loginType = ref('super')
-const username = ref('')
-const password = ref('')
+const username = ref('Corgi')
+const password = ref('123456')
 const rememberMe = ref(false)
 
 const handleLogin = async () => {
     try {
-        await userStore.login({
+        await authStore.login({
             username: username.value,
             password: password.value
         })

@@ -8,15 +8,15 @@
             </el-icon>
         </div>
         <Notification />
-        <el-dropdown>
+        <el-dropdown @command="handleCommand">
             <span class="user-info">
                 <el-avatar :size="32" src="/people.png" />
                 <!-- <span>管理员</span> -->
             </span>
             <template #dropdown>
                 <el-dropdown-menu>
-                    <el-dropdown-item>个人信息</el-dropdown-item>
-                    <el-dropdown-item divided>退出登录</el-dropdown-item>
+                    <el-dropdown-item command="profile">个人信息</el-dropdown-item>
+                    <el-dropdown-item divided command="logout">退出登录</el-dropdown-item>
                 </el-dropdown-menu>
             </template>
         </el-dropdown>
@@ -28,7 +28,12 @@ import DarkModeSwitch from '@/components/DarkModeSwitch/index.vue'
 import Notification from '@/components/Notification/index.vue'
 import { FullScreen, Aim } from '@element-plus/icons-vue'
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/store/auth'
+import { ElMessageBox } from 'element-plus'
 
+const router = useRouter()
+const authStore = useAuthStore()
 const isFullscreen = ref(false)
 
 const toggleFullScreen = () => {
@@ -38,6 +43,21 @@ const toggleFullScreen = () => {
     } else {
         document.exitFullscreen()
         isFullscreen.value = false
+    }
+}
+
+const handleCommand = (command: string) => {
+    if (command === 'logout') {
+        ElMessageBox.confirm('确认退出登录吗？', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+        }).then(() => {
+            authStore.logout()
+            router.push('/login')
+        }).catch(() => {})
+    } else if (command === 'profile') {
+        router.push('/system/user/profile')
     }
 }
 </script>
