@@ -1,0 +1,216 @@
+<template>
+    <el-container class="layout-container" :class="{ 'dark': themeStore.isDarkMode }">
+        <el-aside :width="isCollapse ? '64px' : '200px'" class="aside" style="height: 100vh;">
+            <div class="logo" :class="{ 'collapsed': isCollapse }">
+                <img src="/corgi-logo.png" alt="logo" />
+                <span>{{ appTitle }}</span>
+            </div>
+            <el-menu :default-active="activeMenu" class="el-menu-vertical"
+                :background-color="themeStore.isDarkMode ? '#141414' : '#ffffff'"
+                :text-color="themeStore.isDarkMode ? '#d0d0d0' : '#666666'" active-text-color="#409EFF" router
+                :collapse="isCollapse">
+                <Menu :routes="routes" />
+            </el-menu>
+        </el-aside>
+        <el-container>
+            <el-header class="header" style="height: 56px;">
+                <div class="header-left">
+                    <el-icon class="collapse-btn" @click="toggleCollapse">
+                        <Expand v-if="isCollapse" />
+                        <Fold v-else />
+                    </el-icon>
+                    <el-icon class="collapse-btn" @click="handleRefresh">
+                        <Refresh />
+                    </el-icon>
+                    <Breadcrumb v-if="themeStore.showBreadcrumb" />
+                </div>
+                <UserInfo />
+            </el-header>
+            <el-main>
+                <div class="main-content">
+                    <router-view />
+                </div>
+            </el-main>
+        </el-container>
+    </el-container>
+    <SettingDrawer />
+</template>
+
+<script setup lang="ts">
+import { ref, computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { Expand, Fold, Refresh } from '@element-plus/icons-vue'
+import { useThemeStore } from '@/store/theme'
+import Breadcrumb from '@/components/Breadcrumb/index.vue'
+import UserInfo from '@/components/UserInfo/index.vue'
+import SettingDrawer from '@/components/SettingDrawer/index.vue'
+import Menu from '@/components/Menu/index.vue'
+
+const route = useRoute()
+const router = useRouter()
+const routes = router.options.routes.find(route => route.name === 'Layout')?.children || []
+const themeStore = useThemeStore()
+const isCollapse = ref(localStorage.getItem('menuCollapsed') === 'true')
+
+const appTitle = computed(() => import.meta.env.VITE_APP_TITLE)
+
+const activeMenu = computed(() => {
+    const { meta, path } = route
+    if (meta?.activeMenu) {
+        return meta.activeMenu
+    }
+    return path
+})
+
+const toggleCollapse = () => {
+    isCollapse.value = !isCollapse.value
+    localStorage.setItem('menuCollapsed', isCollapse.value.toString())
+}
+
+const handleRefresh = () => {
+    window.location.reload()
+}
+</script>
+
+<style scoped>
+.main-content {
+    padding: 16px;
+}
+
+.layout-container {
+    height: 100vh;
+    background-color: var(--el-bg-color);
+    color: var(--el-text-color-primary);
+}
+
+.aside {
+    background-color: var(--el-menu-bg-color);
+    transition: width 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    overflow: hidden;
+    will-change: width;
+    border-right: 1px solid var(--el-border-color-light);
+}
+
+.logo {
+    height: 56px;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    overflow: hidden;
+    white-space: nowrap;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.logo img {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+}
+
+.logo span {
+    font-size: 16px;
+    font-weight: 600;
+    transition: opacity 0.2s;
+    opacity: 1;
+    margin-left: 12px;
+}
+
+.logo.collapsed span {
+    opacity: 0;
+}
+
+:deep(.el-menu) {
+    border-right: none;
+    transition: width 0.1s ease-in;
+    height: 100vh;
+}
+
+:deep(.el-menu-item),
+:deep(.el-sub-menu__title) {
+    transition: background-color 0.2s, color 0.2s;
+    height: 40px;
+    line-height: 40px;
+    margin: 4px 0;
+    border-radius: 8px;
+    margin-right: 8px;
+    margin-left: 8px;
+}
+
+:deep(.el-menu-item.is-active) {
+    background-color: var(--el-color-primary-light-9);
+    color: var(--el-color-primary);
+}
+
+:deep(.el-menu-item:hover),
+:deep(.el-sub-menu__title:hover) {
+    background-color: #f5f7fa;
+}
+
+:deep(.el-menu--collapse) {
+
+    .el-menu-item,
+    .el-sub-menu__title {
+        padding: 0 !important;
+        justify-content: center;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+        .el-icon {
+            margin: 0;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        span {
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+    }
+}
+
+:deep(.el-menu:not(.el-menu--collapse)) {
+
+    .el-menu-item,
+    .el-sub-menu__title {
+        .menu-icon {
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: scale(1);
+        }
+
+        span {
+            opacity: 1;
+            transition: opacity 0.2s;
+        }
+    }
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--el-border-color-light);
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+}
+
+.collapse-btn {
+    font-size: 20px;
+    cursor: pointer;
+    margin-left: 16px;
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.collapse-btn:hover {
+    transform: scale(1.1);
+    color: var(--el-color-primary);
+}
+
+.collapse-btn:active {
+    transform: scale(0.95);
+}
+
+.el-main {
+    --el-main-padding: 0;
+}
+</style>
