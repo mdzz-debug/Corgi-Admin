@@ -13,11 +13,8 @@
             </div>
             <div class="notification-list">
                 <div v-for="item in notifications" :key="item.id" class="notification-item">
-                    <el-avatar 
-                        :src="item.avatar" 
-                        :size="40" 
-                        :style="{ backgroundColor: item.bgColor || '#409EFF' }"
-                    >{{ item.initial }}</el-avatar>
+                    <el-avatar :src="item.avatar" :size="40" :style="{ backgroundColor: item.bgColor || '#409EFF' }">{{
+            item.initial }}</el-avatar>
                     <div class="notification-content">
                         <div class="notification-title">{{ item.title }}</div>
                         <div class="notification-desc">{{ item.description }}</div>
@@ -32,7 +29,7 @@
 
 <script setup lang="ts">
 import { Bell } from '@element-plus/icons-vue'
-import { ref } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 
 const showNotification = ref(false)
 const notifications = ref([
@@ -57,6 +54,21 @@ const notifications = ref([
         unread: true
     }
 ])
+
+const handleClickOutside = (event: MouseEvent) => {
+    const notificationBtn = document.querySelector('.notification-btn')
+    if (notificationBtn && !notificationBtn.contains(event.target as Node) && showNotification.value) {
+        showNotification.value = false
+    }
+}
+
+onMounted(() => {
+    document.addEventListener('click', handleClickOutside)
+})
+
+onUnmounted(() => {
+    document.removeEventListener('click', handleClickOutside)
+})
 
 const toggleNotification = () => {
     showNotification.value = !showNotification.value

@@ -1,22 +1,18 @@
 <template>
     <div class="setting-btn" @click="drawer = true">
-        <el-icon class="setting-icon">
-            <Setting />
-        </el-icon>
+        <img src="/seeting.png" class="setting-icon" alt="设置" />
     </div>
 
-    <el-drawer v-model="drawer" title="系统设置" direction="rtl" size="300px">
+    <el-drawer v-model="drawer" title="系统设置" direction="rtl" size="383px">
         <div class="setting-content">
             <el-form label-position="top">
-                <el-form-item label="主题色">
-                    <el-color-picker v-model="themeStore.primaryColor" @change="handlePrimaryColorChange" />
-                </el-form-item>
-
+                <ThemeColorPicker v-model="themeStore.primaryColor" @change="handlePrimaryColorChange" />
                 <el-form-item label="显示面包屑">
                     <el-switch v-model="themeStore.showBreadcrumb" @change="handleBreadcrumbChange" />
                 </el-form-item>
-
-
+                <el-form-item label="显示页脚">
+                    <el-switch v-model="themeStore.showFooter" @change="handleFooterChange" />
+                </el-form-item>
             </el-form>
         </div>
     </el-drawer>
@@ -24,15 +20,13 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Setting } from '@element-plus/icons-vue'
-import { useThemeStore } from '@/store/theme'
+import { useThemeStore } from '@/stores/theme'
+import ThemeColorPicker from '@/components/ThemeColorPicker/index.vue'
 
 const drawer = ref(false)
 const themeStore = useThemeStore()
 
 const handlePrimaryColorChange = (color: string) => {
-    themeStore.setPrimaryColor(color)
-    // 更新根元素CSS变量
     document.documentElement.style.setProperty('--el-color-primary', color)
 }
 
@@ -40,16 +34,23 @@ const handleBreadcrumbChange = (show: boolean) => {
     themeStore.setShowBreadcrumb(show)
 }
 
+const handleFooterChange = (show: boolean) => {
+    themeStore.setShowFooter(show)
+}
 </script>
 
 <style scoped>
+:deep(.el-drawer__body) {
+    padding: 0;
+}
+
 .setting-btn {
     position: fixed;
     right: 20px;
     bottom: 20px;
     width: 48px;
     height: 48px;
-    background-color: #409EFF;
+    background-color: var(--el-color-primary);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -60,72 +61,35 @@ const handleBreadcrumbChange = (show: boolean) => {
 }
 
 .setting-btn:hover {
+    animation: wiggle 0.6s ease-in-out infinite;
     transform: scale(1.1);
 }
 
 .setting-icon {
-    font-size: 24px;
-    color: #fff;
-}
-
-.setting-content {
-    padding: 20px;
-}
-
-.dark-mode-switch {
-    width: 60px;
-    height: 30px;
-    background-color: #e6e6e6;
-    border-radius: 15px;
-    position: relative;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.dark-mode-switch.is-dark {
-    background-color: #1a1a1a;
-}
-
-.switch-handle {
-    width: 26px;
-    height: 26px;
-    background-color: #fff;
-    border-radius: 50%;
-    position: absolute;
-    top: 2px;
-    left: 2px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    width: 24px;
+    height: 24px;
     transition: transform 0.3s;
 }
 
-.dark-mode-switch.is-dark .switch-handle {
-    transform: translateX(30px);
+@keyframes wiggle {
+
+    0%,
+    100% {
+        transform: scale(1.1) rotate(0deg);
+    }
+
+    25% {
+        transform: scale(1.1) rotate(-10deg);
+    }
+
+    75% {
+        transform: scale(1.1) rotate(10deg);
+    }
 }
 
-.light-icon,
-.dark-icon {
-    position: absolute;
-    font-size: 16px;
-    transition: opacity 0.3s;
-}
-
-.light-icon {
-    color: #f1c40f;
-    opacity: 1;
-}
-
-.dark-icon {
-    color: #34495e;
-    opacity: 0;
-}
-
-.dark-mode-switch.is-dark .light-icon {
-    opacity: 0;
-}
-
-.dark-mode-switch.is-dark .dark-icon {
-    opacity: 1;
+.setting-icon {
+    width: 24px;
+    height: 24px;
+    color: #fff;
 }
 </style>

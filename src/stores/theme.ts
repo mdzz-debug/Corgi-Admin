@@ -4,7 +4,8 @@ export const useThemeStore = defineStore('theme', {
     state: () => ({
         primaryColor: '#409EFF',
         showBreadcrumb: true,
-        isDarkMode: false
+        isDarkMode: false,
+        showFooter: true
     }),
     actions: {
         setPrimaryColor(color: string) {
@@ -13,6 +14,9 @@ export const useThemeStore = defineStore('theme', {
         },
         setShowBreadcrumb(show: boolean) {
             this.showBreadcrumb = show
+        },
+        setShowFooter(show: boolean) {
+            this.showFooter = show
         },
         toggleDarkMode() {
             this.isDarkMode = !this.isDarkMode

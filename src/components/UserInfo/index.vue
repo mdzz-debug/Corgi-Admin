@@ -15,6 +15,31 @@
             </span>
             <template #dropdown>
                 <el-dropdown-menu>
+                    <div class="user-profile-card">
+                        <div class="user-profile-header">
+                            <el-avatar :size="64" src="/people.png" />
+                            <div class="user-profile-info">
+                                <h3 class="user-name">Vben</h3>
+                                <span class="user-role" :class="{
+            'user-role-normal': authStore.role === 0,
+            'user-role-admin': authStore.role === 1,
+            'user-role-super': authStore.role === 2
+        }">
+                                    {{ authStore.role === 0 ? '普通用户' : authStore.role === 1 ? '管理员' : '超级管理员' }}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="user-profile-details">
+                            <div class="detail-item">
+                                <span class="detail-label">邮箱</span>
+                                <span class="detail-value">{{ authStore.email }}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">手机号</span>
+                                <span class="detail-value">{{ authStore.phone }}</span>
+                            </div>
+                        </div>
+                    </div>
                     <el-dropdown-item command="profile">个人信息</el-dropdown-item>
                     <el-dropdown-item divided command="logout">退出登录</el-dropdown-item>
                 </el-dropdown-menu>
@@ -29,7 +54,7 @@ import Notification from '@/components/Notification/index.vue'
 import { FullScreen, Aim } from '@element-plus/icons-vue'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useAuthStore } from '@/store/auth'
+import { useAuthStore } from '@/stores/auth'
 import { ElMessageBox } from 'element-plus'
 
 const router = useRouter()
@@ -55,7 +80,7 @@ const handleCommand = (command: string) => {
         }).then(() => {
             authStore.logout()
             router.push('/login')
-        }).catch(() => {})
+        }).catch(() => { })
     } else if (command === 'profile') {
         router.push('/system/user/profile')
     }
@@ -214,6 +239,75 @@ const handleCommand = (command: string) => {
 .notification-time {
     font-size: 12px;
     color: var(--el-text-color-secondary);
+}
+
+.user-profile-card {
+    padding: 16px;
+    width: 300px;
+    background: var(--el-bg-color);
+    border-bottom: 1px solid var(--el-border-color-lighter);
+}
+
+.user-profile-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.user-profile-info {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.user-name {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--el-text-color-primary);
+}
+
+.user-role {
+    font-size: 12px;
+    color: #fff;
+    padding: 2px 8px;
+    border-radius: 12px;
+}
+
+.user-role-normal {
+    background-color: var(--el-color-primary);
+}
+
+.user-role-admin {
+    background-color: var(--el-color-success);
+}
+
+.user-role-super {
+    background-color: var(--el-color-danger);
+}
+
+.user-profile-details {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.detail-label {
+    font-size: 13px;
+    color: var(--el-text-color-secondary);
+}
+
+.detail-value {
+    font-size: 13px;
+    color: var(--el-text-color-primary);
 }
 
 @keyframes slideDown {

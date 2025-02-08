@@ -18,7 +18,9 @@
                     <el-form-item>
                         <el-input v-model="password" type="password" placeholder="123456" show-password>
                             <template #suffix>
-                                <el-icon><View /></el-icon>
+                                <el-icon>
+                                    <View />
+                                </el-icon>
                             </template>
                         </el-input>
                     </el-form-item>
@@ -36,7 +38,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useAuthStore } from '@/store/auth'
+import { useAuthStore } from '@/stores/auth'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -65,7 +67,54 @@ const handleLogin = async () => {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(to right, #f0f2f5, #e6f7ff);
+    background: #FBE8D3;
+    /* 柯基毛色背景 */
+    position: relative;
+    overflow: hidden;
+}
+
+.login-container::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    height: 40vh;
+    background: #E5A975;
+    /* 柯基背部颜色 */
+    border-radius: 50% 50% 0 0;
+}
+
+.login-container::after {
+    content: '';
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 60px;
+    background: #8B4513;
+    /* 柯基尾巴颜色 */
+    border-radius: 50%;
+    animation: wagTail 1s infinite alternate;
+}
+
+.login-content {
+    position: relative;
+    z-index: 1;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+}
+
+@keyframes wagTail {
+    from {
+        transform: translateX(-50%) rotate(-15deg);
+    }
+
+    to {
+        transform: translateX(-50%) rotate(15deg);
+    }
 }
 
 .login-content {

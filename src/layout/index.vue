@@ -28,9 +28,16 @@
             </el-header>
             <el-main>
                 <div class="main-content">
-                    <router-view />
+                    <LoadingCorgi :loading="loadingStore.isLoading" />
+                    <transition name="fade-slide" mode="out-in" @before-enter="() => loadingStore.setLoading(true)"
+                        @after-enter="() => loadingStore.setLoading(false)">
+                        <router-view />
+                    </transition>
                 </div>
             </el-main>
+            <el-footer v-if="themeStore.showFooter" height="auto">
+                <Footer />
+            </el-footer>
         </el-container>
     </el-container>
     <SettingDrawer />
@@ -40,17 +47,21 @@
 import { ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { Expand, Fold, Refresh } from '@element-plus/icons-vue'
-import { useThemeStore } from '@/store/theme'
+import { useThemeStore } from '@/stores/theme'
+import { useLoadingStore } from '@/stores/loading'
 import Breadcrumb from '@/components/Breadcrumb/index.vue'
 import UserInfo from '@/components/UserInfo/index.vue'
 import SettingDrawer from '@/components/SettingDrawer/index.vue'
 import Menu from '@/components/Menu/index.vue'
+import LoadingCorgi from '@/components/LoadingCorgi.vue'
+import Footer from '@/components/Footer/index.vue'
 
 const route = useRoute()
 const router = useRouter()
 const routes = router.options.routes.find(route => route.name === 'Layout')?.children || []
 const themeStore = useThemeStore()
 const isCollapse = ref(localStorage.getItem('menuCollapsed') === 'true')
+const loadingStore = useLoadingStore()
 
 const appTitle = computed(() => import.meta.env.VITE_APP_TITLE)
 
@@ -68,13 +79,55 @@ const toggleCollapse = () => {
 }
 
 const handleRefresh = () => {
-    window.location.reload()
+    loadingStore.setLoading(true)
+    const { fullPath } = route
+    router.replace(fullPath)
+    // 模拟接口 1S 后关闭
+    setTimeout(() => {
+        loadingStore.setLoading(false)
+    }, 3000)
 }
+
+
 </script>
 
 <style scoped>
 .main-content {
     padding: 16px;
+    position: relative;
+    height: calc(100vh - 56px - 32px)
+}
+
+.loading-mask {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.loading-icon {
+    animation: loading-rotate 1s linear infinite;
+    color: var(--el-color-primary);
+}
+
+@keyframes loading-rotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.dark .loading-mask {
+    background-color: rgba(0, 0, 0, 0.8);
 }
 
 .layout-container {
@@ -121,8 +174,7 @@ const handleRefresh = () => {
 
 :deep(.el-menu) {
     border-right: none;
-    transition: width 0.1s ease-in;
-    height: 100vh;
+    transform-origin: left;
 }
 
 :deep(.el-menu-item),
@@ -215,5 +267,32 @@ const handleRefresh = () => {
 
 .el-main {
     --el-main-padding: 0;
+}
+
+/* 路由切换动画 */
+.fade-slide-enter-active,
+.fade-slide-leave-active {
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    /* 将时间从 0.4s 增加到 0.6s */
+}
+
+.fade-slide-enter-from {
+    opacity: 0;
+    transform: translateX(-30px);
+}
+
+.fade-slide-enter-to {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.fade-slide-leave-from {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.fade-slide-leave-to {
+    opacity: 0;
+    transform: translateX(30px);
 }
 </style>
