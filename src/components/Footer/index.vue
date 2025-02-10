@@ -8,13 +8,17 @@
                     <el-link type="primary" href="https://element-plus.org" target="_blank">Element Plus</el-link>
                     <el-divider direction="vertical" />
                     <el-link type="primary" href="https://vuejs.org" target="_blank">Vue.js</el-link>
+                    <el-divider direction="vertical" />
+                    <el-link type="primary" href="https://pinia.vuejs.org" target="_blank">Pinia</el-link>
+                    <el-divider direction="vertical" />
+                    <el-link type="primary" href="https://www.typescriptlang.org" target="_blank">TypeScript</el-link>
                 </el-space>
             </div>
             <div class="footer-section info">
                 <span class="copyright">© {{ currentYear }} Corgi Admin. All rights reserved.</span>
                 <el-divider direction="vertical" />
                 <el-link class="icp" type="info" href="https://beian.miit.gov.cn"
-                    target="_blank">粤ICP备xxxxxxxx号</el-link>
+                    target="_blank">津ICP备xxxxxxxx号</el-link>
             </div>
         </div>
     </footer>

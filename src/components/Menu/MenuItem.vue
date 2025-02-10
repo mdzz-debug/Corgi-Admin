@@ -1,5 +1,5 @@
 <template>
-    <template v-if="!route.meta?.hidden">
+    <template v-if="!route.meta?.hidden && (!route.meta?.roles || (Array.isArray(route.meta.roles) && hasPermission(route.meta.roles)))">
         <el-menu-item v-if="!route.children || route.children.length === 0" :index="getFullPath(route.path)">
             <el-icon v-if="route.meta?.icon">
                 <component :is="route.meta.icon" />
@@ -23,13 +23,20 @@
 
 <script setup lang="ts">
 import type { RouteRecordRaw } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
 
 defineProps<{
     route: RouteRecordRaw
 }>()
 
+const authStore = useAuthStore()
+
 const getFullPath = (path: string) => {
     return path.startsWith('/') ? path : `/${path}`
+}
+
+const hasPermission = (roles: number[]) => {
+    return roles.includes(authStore.role)
 }
 </script>
 

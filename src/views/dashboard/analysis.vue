@@ -8,16 +8,50 @@
             </template>
             <div class="analysis-content">
                 <el-row :gutter="20">
-                    <el-col :span="12">
-                        <el-card shadow="hover" class="chart-card">
-                            <h3>访问趋势</h3>
-                            <div class="chart-placeholder">图表区域</div>
-                        </el-card>
+                    <el-col :span="6">
+                        <StatCard
+                            title="用户量"
+                            :value="2000"
+                            :total="120000"
+                            icon="User"
+                            icon-color="#409EFF"
+                        />
                     </el-col>
-                    <el-col :span="12">
+                    <el-col :span="6">
+                        <StatCard
+                            title="访问量"
+                            :value="20000"
+                            :total="500000"
+                            icon="View"
+                            icon-color="#67C23A"
+                        />
+                    </el-col>
+                    <el-col :span="6">
+                        <StatCard
+                            title="下载量"
+                            :value="8000"
+                            :total="120000"
+                            icon="Download"
+                            icon-color="#E6A23C"
+                        />
+                    </el-col>
+                    <el-col :span="6">
+                        <StatCard
+                            title="使用量"
+                            :value="5000"
+                            :total="50000"
+                            icon="Timer"
+                            icon-color="#F56C6C"
+                        />
+                    </el-col>
+                </el-row>
+                <el-row :gutter="20" class="mt-4">
+                    <el-col :span="24">
                         <el-card shadow="hover" class="chart-card">
-                            <h3>用户分布</h3>
-                            <div class="chart-placeholder">图表区域</div>
+                            <div class="chart-header">
+                                <h3>月度访问量统计</h3>
+                            </div>
+                            <div v-show="currentChart === 'monthly'" ref="monthlyChartRef" style="width: 100%; height: 400px"></div>
                         </el-card>
                     </el-col>
                 </el-row>
@@ -40,6 +74,24 @@
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted } from 'vue'
+import * as echarts from 'echarts'
+import { getMonthlyChartOption } from './config/monthlyChartConfig'
+
+const monthlyChartRef = ref()
+const currentChart = ref('monthly')
+
+const initMonthlyChart = () => {
+    const chartDom = monthlyChartRef.value
+    const myChart = echarts.init(chartDom)
+    const option = getMonthlyChartOption()
+    myChart.setOption(option)
+}
+
+onMounted(() => {
+    initMonthlyChart()
+})
+
 const tableData = [
     {
         date: '2023-01-01',
@@ -63,6 +115,24 @@ const tableData = [
 </script>
 
 <style scoped>
+.mb-4 {
+    margin-bottom: 1rem;
+}
+
+.mt-4 {
+    margin-top: 1rem;
+}
+
+.chart-card {
+    margin-bottom: 1rem;
+}
+
+.chart-card h3 {
+    margin-bottom: 1rem;
+    font-size: 16px;
+    color: var(--el-text-color-primary);
+}
+
 .analysis-container {
     padding: 20px;
 }
@@ -78,7 +148,19 @@ const tableData = [
 }
 
 .chart-card {
-    height: 300px;
+    min-height: 500px;
+    margin-bottom: 20px;
+}
+
+.chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.chart-header h3 {
+    margin: 0;
 }
 
 .chart-placeholder {

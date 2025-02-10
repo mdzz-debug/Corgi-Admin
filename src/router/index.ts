@@ -3,7 +3,7 @@ import type { RouteRecordRaw } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 
 import dashboardRoute from './modules/dashboard'
-import systemRoute from './modules/system'
+import systemRoute, { superRoute, adminRoute } from './modules/system'
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -13,7 +13,9 @@ const routes: Array<RouteRecordRaw> = [
         redirect: '/dashboard',
         children: [
             dashboardRoute,
-            systemRoute
+            systemRoute,
+            superRoute,
+            adminRoute
         ]
     },
     {

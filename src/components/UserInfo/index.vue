@@ -46,11 +46,13 @@
             </template>
         </el-dropdown>
     </div>
+    <UserProfile ref="userProfileRef" />
 </template>
 
 <script setup lang="ts">
 import DarkModeSwitch from '@/components/DarkModeSwitch/index.vue'
 import Notification from '@/components/Notification/index.vue'
+import UserProfile from '@/components/UserProfile/index.vue'
 import { FullScreen, Aim } from '@element-plus/icons-vue'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
@@ -60,19 +62,12 @@ import { ElMessageBox } from 'element-plus'
 const router = useRouter()
 const authStore = useAuthStore()
 const isFullscreen = ref(false)
-
-const toggleFullScreen = () => {
-    if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen()
-        isFullscreen.value = true
-    } else {
-        document.exitFullscreen()
-        isFullscreen.value = false
-    }
-}
+const userProfileRef = ref()
 
 const handleCommand = (command: string) => {
-    if (command === 'logout') {
+    if (command === 'profile') {
+        userProfileRef.value?.showDialog()
+    } else if (command === 'logout') {
         ElMessageBox.confirm('确认退出登录吗？', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
@@ -81,8 +76,15 @@ const handleCommand = (command: string) => {
             authStore.logout()
             router.push('/login')
         }).catch(() => { })
-    } else if (command === 'profile') {
-        router.push('/system/user/profile')
+    }
+}
+const toggleFullScreen = () => {
+    if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen()
+        isFullscreen.value = true
+    } else {
+        document.exitFullscreen()
+        isFullscreen.value = false
     }
 }
 </script>

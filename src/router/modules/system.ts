@@ -1,4 +1,5 @@
 import type { RouteRecordRaw } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
 
 const systemRoute: RouteRecordRaw = {
     path: 'system',
@@ -30,4 +31,27 @@ const systemRoute: RouteRecordRaw = {
     ]
 }
 
+const superRoute: RouteRecordRaw = {
+    path: 'super',
+    name: 'Super',
+    component: () => import('@/views/system/super/index.vue'),
+    meta: {
+        title: 'Super可见',
+        icon: 'Key',
+        roles: [2] // 只有 Super 管理员可见
+    }
+}
+
+const adminRoute: RouteRecordRaw = {
+    path: 'admin',
+    name: 'Admin',
+    component: () => import('@/views/system/admin/index.vue'),
+    meta: {
+        title: 'S/Admin可见',
+        icon: 'Lock',
+        roles: [1, 2] // Admin 和 Super 管理员可见
+    }
+}
+
+export { superRoute, adminRoute }
 export default systemRoute

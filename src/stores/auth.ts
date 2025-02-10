@@ -7,6 +7,7 @@ interface LoginParams {
 
 export const useAuthStore = defineStore('auth', {
     state: () => ({
+        avatar: '',
         token: '',
         username: '',
         phone: '',

@@ -44,7 +44,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { Expand, Fold, Refresh } from '@element-plus/icons-vue'
 import { useThemeStore } from '@/stores/theme'
@@ -77,6 +77,24 @@ const toggleCollapse = () => {
     isCollapse.value = !isCollapse.value
     localStorage.setItem('menuCollapsed', isCollapse.value.toString())
 }
+
+const handleResize = () => {
+    if (window.innerWidth < 992) {
+        isCollapse.value = true
+    } else {
+        isCollapse.value = false
+    }
+    localStorage.setItem('menuCollapsed', isCollapse.value.toString())
+}
+
+onMounted(() => {
+    handleResize()
+    window.addEventListener('resize', handleResize)
+})
+
+onUnmounted(() => {
+    window.removeEventListener('resize', handleResize)
+})
 
 const handleRefresh = () => {
     loadingStore.setLoading(true)
