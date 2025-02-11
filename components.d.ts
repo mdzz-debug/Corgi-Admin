@@ -61,7 +61,6 @@ declare module 'vue' {
     Footer: typeof import('./src/components/Footer/index.vue')['default']
     ForgotPassword: typeof import('./src/components/ForgotPassword/index.vue')['default']
     LoadingCorgi: typeof import('./src/components/LoadingCorgi.vue')['default']
-    'LoadingCorgi copy': typeof import('./src/components/LoadingCorgi copy.vue')['default']
     Menu: typeof import('./src/components/Menu/index.vue')['default']
     MenuItem: typeof import('./src/components/Menu/MenuItem.vue')['default']
     Notification: typeof import('./src/components/Notification/index.vue')['default']

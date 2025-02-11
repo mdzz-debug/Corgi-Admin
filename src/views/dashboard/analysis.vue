@@ -9,40 +9,16 @@
             <div class="analysis-content">
                 <el-row :gutter="20">
                     <el-col :span="6">
-                        <StatCard
-                            title="用户量"
-                            :value="2000"
-                            :total="120000"
-                            icon="User"
-                            icon-color="#409EFF"
-                        />
+                        <StatCard title="用户量" :value="2000" :total="120000" icon="User" icon-color="#409EFF" />
                     </el-col>
                     <el-col :span="6">
-                        <StatCard
-                            title="访问量"
-                            :value="20000"
-                            :total="500000"
-                            icon="View"
-                            icon-color="#67C23A"
-                        />
+                        <StatCard title="访问量" :value="20000" :total="500000" icon="View" icon-color="#67C23A" />
                     </el-col>
                     <el-col :span="6">
-                        <StatCard
-                            title="下载量"
-                            :value="8000"
-                            :total="120000"
-                            icon="Download"
-                            icon-color="#E6A23C"
-                        />
+                        <StatCard title="下载量" :value="8000" :total="120000" icon="Download" icon-color="#E6A23C" />
                     </el-col>
                     <el-col :span="6">
-                        <StatCard
-                            title="使用量"
-                            :value="5000"
-                            :total="50000"
-                            icon="Timer"
-                            icon-color="#F56C6C"
-                        />
+                        <StatCard title="使用量" :value="5000" :total="50000" icon="Timer" icon-color="#F56C6C" />
                     </el-col>
                 </el-row>
                 <el-row :gutter="20" class="mt-4">
@@ -51,7 +27,8 @@
                             <div class="chart-header">
                                 <h3>月度访问量统计</h3>
                             </div>
-                            <div v-show="currentChart === 'monthly'" ref="monthlyChartRef" style="width: 100%; height: 400px"></div>
+                            <div v-show="currentChart === 'monthly'" ref="monthlyChartRef"
+                                style="width: 100%; height: 400px"></div>
                         </el-card>
                     </el-col>
                 </el-row>
@@ -77,6 +54,7 @@
 import { ref, onMounted } from 'vue'
 import * as echarts from 'echarts'
 import { getMonthlyChartOption } from './config/monthlyChartConfig'
+import { mockTableData } from '@/mock/chart'
 
 const monthlyChartRef = ref()
 const currentChart = ref('monthly')
@@ -92,26 +70,7 @@ onMounted(() => {
     initMonthlyChart()
 })
 
-const tableData = [
-    {
-        date: '2023-01-01',
-        visits: 1234,
-        users: 123,
-        orders: 45
-    },
-    {
-        date: '2023-01-02',
-        visits: 2234,
-        users: 234,
-        orders: 56
-    },
-    {
-        date: '2023-01-03',
-        visits: 3234,
-        users: 345,
-        orders: 67
-    }
-]
+const tableData = mockTableData
 </script>
 
 <style scoped>

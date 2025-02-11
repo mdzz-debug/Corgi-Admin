@@ -19,9 +19,11 @@
     "vue-router": "^4.5.0"
   },
   "devDependencies": {
+    "@types/mockjs": "^1.0.10",
     "@types/node": "^22.13.1",
     "@vitejs/plugin-vue": "^5.2.1",
     "@vue/tsconfig": "^0.7.0",
+    "mockjs": "^1.1.0",
     "typescript": "~5.7.2",
     "unplugin-auto-import": "^19.0.0",
     "unplugin-vue-components": "^28.0.0",

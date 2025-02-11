@@ -1,4 +1,5 @@
 import * as echarts from 'echarts'
+import { mockMonthlyVisits } from '@/mock/chart'
 
 export const getMonthlyChartOption = () => ({
     tooltip: {
@@ -52,6 +53,6 @@ export const getMonthlyChartOption = () => ({
         emphasis: {
             focus: 'series'
         },
-        data: [3000, 2000, 3200, 5000, 3000, 4200, 3100, 2100, 2800, 5200, 6000, 3000]
+        data: mockMonthlyVisits
     }]
 })

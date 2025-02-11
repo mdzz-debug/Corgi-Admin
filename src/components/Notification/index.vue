@@ -4,15 +4,17 @@
             <el-icon :size="20">
                 <Bell />
             </el-icon>
-            <el-badge :value="notifications.length" class="notification-badge" />
+            <el-badge v-if="notifications.filter((item: NotificationItem) => item.unread).length > 0"
+                :value="notifications.filter((item: NotificationItem) => item.unread).length"
+                class="notification-badge" />
         </div>
         <div v-show="showNotification" class="notification-panel">
             <div class="notification-header">
                 <span>通知</span>
-                <el-button link type="primary" size="small" class="clear-btn">清空</el-button>
+                <el-button link type="primary" size="small" class="clear-btn" @click="clearNotifications">清空</el-button>
             </div>
             <div class="notification-list">
-                <div v-for="item in notifications" :key="item.id" class="notification-item">
+                <div v-for="item in notifications" :key="item.id" class="notification-item" @click="showDetail(item)">
                     <el-avatar :src="item.avatar" :size="40" :style="{ backgroundColor: item.bgColor || '#409EFF' }">{{
             item.initial }}</el-avatar>
                     <div class="notification-content">
@@ -24,36 +26,38 @@
                 </div>
             </div>
         </div>
+
+        <!-- 通知详情对话框 -->
+        <el-dialog v-model="showDetailDialog" :title="currentNotification?.title || '通知详情'" width="30%"
+            :before-close="handleDetailClose">
+            <div class="notification-detail" v-if="currentNotification">
+                <div class="detail-header">
+                    <el-avatar :src="currentNotification.avatar" :size="50"
+                        :style="{ backgroundColor: currentNotification.bgColor || '#409EFF' }">
+                        {{ currentNotification.initial }}
+                    </el-avatar>
+                    <div class="detail-time">{{ currentNotification.time }}</div>
+                </div>
+                <div class="detail-content">
+                    <p>{{ currentNotification.description }}</p>
+                </div>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
 <script setup lang="ts">
 import { Bell } from '@element-plus/icons-vue'
 import { ref, onMounted, onUnmounted } from 'vue'
+import type { NotificationItem } from '@/types/notification'
+import { mockNotifications } from '@/mock/notifications'
 
 const showNotification = ref(false)
-const notifications = ref([
-    {
-        id: 1,
-        avatar: '/vb-logo.png',
-        initial: 'VB',
-        bgColor: '#67C23A',  // 绿色
-        title: '收到了 14 份新闻报',
-        description: '描述信息描述信息描述信息描述',
-        time: '3小时前',
-        unread: true
-    },
-    {
-        id: 2,
-        avatar: '/avatar1.png',
-        initial: '朱',
-        bgColor: '#E6A23C',  // 橙色
-        title: '朱偏右 回复了你',
-        description: '描述信息描述信息描述信息描述',
-        time: '刚刚',
-        unread: true
-    }
-])
+const showDetailDialog = ref(false)
+
+const currentNotification = ref<NotificationItem | null>(null)
+
+const notifications = ref(mockNotifications)
 
 const handleClickOutside = (event: MouseEvent) => {
     const notificationBtn = document.querySelector('.notification-btn')
@@ -72,6 +76,23 @@ onUnmounted(() => {
 
 const toggleNotification = () => {
     showNotification.value = !showNotification.value
+}
+
+const showDetail = (notification: any) => {
+    currentNotification.value = notification
+    showDetailDialog.value = true
+    if (notification.unread) {
+        notification.unread = false
+    }
+}
+
+const handleDetailClose = () => {
+    showDetailDialog.value = false
+    currentNotification.value = null
+}
+
+const clearNotifications = () => {
+    notifications.value = []
 }
 </script>
 
@@ -160,7 +181,9 @@ const toggleNotification = () => {
     gap: 12px;
     cursor: pointer;
     border-bottom: 1px solid var(--el-border-color-lighter);
-    transition: background-color 0.2s;
+    transition: all 0.3s ease;
+    position: relative;
+    background: var(--el-bg-color);
 }
 
 .notification-item:hover {
@@ -187,6 +210,10 @@ const toggleNotification = () => {
 
 .notification-desc {
     margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 16px;
 }
 
 /* 未读标记 */
@@ -228,5 +255,28 @@ const toggleNotification = () => {
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+/* 详情对话框样式 */
+.notification-detail {
+    padding: 20px;
+}
+
+.detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.detail-time {
+    font-size: 14px;
+    color: var(--el-text-color-secondary);
+}
+
+.detail-content {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--el-text-color-primary);
 }
 </style>

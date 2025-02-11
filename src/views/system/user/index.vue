@@ -5,30 +5,16 @@
                 <div class="card-header">
                     <span>用户管理</span>
                     <div class="search-area">
-                        <el-input
-                            v-model="searchQuery.name"
-                            placeholder="请输入姓名"
-                            style="width: 200px; margin-right: 10px"
-                            clearable
-                            @clear="handleSearch"
-                        />
-                        <el-input
-                            v-model="searchQuery.phone"
-                            placeholder="请输入手机号"
-                            style="width: 200px; margin-right: 10px"
-                            clearable
-                            @clear="handleSearch"
-                        />
+                        <el-input v-model="searchQuery.name" placeholder="请输入姓名"
+                            style="width: 200px; margin-right: 10px" clearable @clear="handleSearch" />
+                        <el-input v-model="searchQuery.phone" placeholder="请输入手机号"
+                            style="width: 200px; margin-right: 10px" clearable @clear="handleSearch" />
                         <el-button type="primary" @click="handleSearch">搜索</el-button>
                     </div>
                 </div>
             </template>
             <div class="user-content">
-                <el-table
-                    :data="displayUsers"
-                    style="width: 100%"
-                    @selection-change="handleSelectionChange"
-                >
+                <el-table :data="displayUsers" style="width: 100%" @selection-change="handleSelectionChange">
                     <el-table-column type="selection" width="55" />
                     <el-table-column prop="id" label="ID" width="80" />
                     <el-table-column prop="name" label="姓名" width="120" />
@@ -44,18 +30,10 @@
                     <el-table-column prop="createTime" label="创建时间" width="120" />
                 </el-table>
                 <div class="pagination-container">
-                    <el-pagination
-                        v-model:current-page="currentPage"
-                        v-model:page-size="pageSize"
-                        :page-sizes="[10, 20, 50, 100]"
-                        :total="filteredUsers.length"
-                        layout="total, sizes, prev, pager, next"
-                        :prev-text="'上一页'"
-                        :next-text="'下一页'"
-                        :total-text="'总条数：'"
-                        @size-change="handleSizeChange"
-                        @current-change="handleCurrentChange"
-                    />
+                    <el-pagination v-model:current-page="currentPage" v-model:page-size="pageSize"
+                        :page-sizes="[10, 20, 50, 100]" :total="filteredUsers.length"
+                        layout="total, sizes, prev, pager, next" :prev-text="'上一页'" :next-text="'下一页'"
+                        :total-text="'总条数：'" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
                 </div>
             </div>
         </el-card>
@@ -64,7 +42,8 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { mockUsers, type User } from './data'
+import type { User } from '@/types/system/user'
+import { mockUsers } from '@/mock/users'
 
 // 搜索条件
 const searchQuery = ref({
@@ -82,8 +61,8 @@ const selectedUsers = ref<User[]>([])
 // 根据搜索条件过滤用户
 const filteredUsers = computed(() => {
     return mockUsers.filter(user => {
-        const nameMatch = user.name.toLowerCase().includes(searchQuery.value.name.toLowerCase())
-        const phoneMatch = user.phone.includes(searchQuery.value.phone)
+        const nameMatch = searchQuery.value.name ? user.name.toLowerCase().includes(searchQuery.value.name.toLowerCase()) : true
+        const phoneMatch = searchQuery.value.phone ? user.phone.includes(searchQuery.value.phone) : true
         return nameMatch && phoneMatch
     })
 })
