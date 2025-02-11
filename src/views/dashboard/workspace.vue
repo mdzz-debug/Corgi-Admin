@@ -33,7 +33,7 @@
                             <h3>待办事项</h3>
                             <el-checkbox-group v-model="checkedTodos">
                                 <div v-for="todo in todos" :key="todo.id" class="todo-item">
-                                    <el-checkbox :label="todo.id">{{ todo.content }}</el-checkbox>
+                                    <el-checkbox :value="todo.id">{{ todo.content }}</el-checkbox>
                                 </div>
                             </el-checkbox-group>
                         </el-card>

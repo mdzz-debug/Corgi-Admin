@@ -15,8 +15,14 @@ onMounted(() => {
 </script>
 
 <template>
-  <router-view />
+  <router-view v-slot="{ Component, route }">
+    <keep-alive v-if="route.meta.keepAlive">
+      <component :is="Component" :key="route.fullPath" />
+    </keep-alive>
+    <component v-else :is="Component" :key="route.fullPath" />
+  </router-view>
 </template>
+
 
 <style>
 /* 添加一些全局样式 */
